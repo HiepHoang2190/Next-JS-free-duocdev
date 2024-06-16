@@ -117,6 +117,16 @@ export default function Home() {
           </p>
         </a>
       </div> */}
+
+      {/* <h1 className='text-4xl roboto-thin text-center'>
+        Xin chào mọi người
+      </h1> */}
+        <h1 className='text-4xl font-thin text-center'>
+        Xin chào mọi người
+      </h1>
+      <h1 className=' text-4xl font-regular text-center'>
+        Xin chào mọi người
+      </h1>
     </main>
   );
 }
