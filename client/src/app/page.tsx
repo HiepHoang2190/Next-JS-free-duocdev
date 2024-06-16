@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import suffer from '../../public/images/suffer.png'
 import Image from "next/image";
 import Card from "@/app/Card";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Card></Card>
+      {/* <Card></Card> */}
       {/* <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
           Get started by editing&nbsp;
@@ -121,12 +122,39 @@ export default function Home() {
       {/* <h1 className='text-4xl roboto-thin text-center'>
         Xin chào mọi người
       </h1> */}
-        <h1 className='text-4xl font-thin text-center'>
+        {/* <h1 className='text-4xl font-thin text-center'>
         Xin chào mọi người
       </h1>
       <h1 className=' text-4xl font-regular text-center'>
         Xin chào mọi người
-      </h1>
+      </h1> */}
+
+      <div className="w-[700px] h-[700px] bg-red-300">
+        <Image src={"/images/suffer.png"} 
+        width={200}
+        height={200}
+        quality={100}
+        className="w-[500px] h-[500px]"
+        alt={"suffer"}>
+
+        </Image>
+        <Image src={suffer} 
+        width={200}
+        height={200}
+        quality={100}
+        className="w-[200px] h-[200px]"
+        alt={"suffer"}>
+
+        </Image>
+        <Image src={'https://images.pexels.com/photos/9869348/pexels-photo-9869348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'} 
+        width={600}
+        height={400}
+        quality={100}
+        className="w-[200px] h-[200px]"
+        alt={"suffer"}>
+
+        </Image>
+      </div>
     </main>
   );
 }
