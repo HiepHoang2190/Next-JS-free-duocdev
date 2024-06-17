@@ -4,7 +4,7 @@ import {websites } from '@/lib/data'
 
 export default function LoginPage() {
   const [email, setEmail] = useState("test@gmail.com")
-  console.log('LoginPage')
+  // console.log('LoginPage')
   return <div>
     Login page
     
