@@ -1,8 +1,13 @@
+import { ModeToggle } from '@/components/mode-toogle'
 import React from 'react'
 
 const RegisterPage = () => {
   return (
-    <div>Register page</div>
+
+    <div>
+      <ModeToggle/>
+      Register page
+      </div>
   )
 }
 
