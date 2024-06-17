@@ -1,7 +1,11 @@
-import React from 'react'
+'use client'
+import React, { useState } from "react";
 
 export default function LoginPage() {
-  return (
-    <div>Login page</div>
-  )
+  const [email, setEmail] = useState("test@gmail.com")
+  console.log('LoginPage')
+  return <div>
+    Login page
+    {email}
+  </div>
 }
