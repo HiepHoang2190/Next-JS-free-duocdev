@@ -45,7 +45,12 @@ export default function RootLayout({
       </head> */}
       {/* <body className={roboto.className}>{children}</body> */}
       {/* <body className={myFont.className}>{children}</body> */}
-      <body className={`${myFont.className} ${myFont.variable}`}>{children}</body>
+      <body className={`${myFont.className} ${myFont.variable}`}>
+        <header>
+          Header
+        </header>
+        {children}
+        </body>
     </html>
   );
 }
