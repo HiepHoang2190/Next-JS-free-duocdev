@@ -73,17 +73,17 @@
     body {
       @apply bg-background text-foreground;
     }
-    h1,
+    /* h1,
     h2,
     h3 {
       @apply text-red-500;
-    }
+    } */
   }
 
   @layer utilities {
-    .text-mini {
+    /* .text-mini {
       @apply text-xs;
-    }
+    } */
     /* .roboto-thin {
       font-family: "Roboto", sans-serif;
       font-weight: 100;
