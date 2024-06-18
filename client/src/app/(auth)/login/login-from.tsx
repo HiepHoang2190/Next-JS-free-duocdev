@@ -44,7 +44,7 @@ const LoginForm = () => {
           method: "POST",
         }
       ).then(async (res) => {
-        console.log(res)
+        // console.log(res)
         const payload = await res.json()
         const data = {
           status: res.status,
@@ -59,7 +59,29 @@ const LoginForm = () => {
       toast({    
         description:result.payload.message
       })
-      console.log("result", result)
+      const resultFromNextServer = await fetch('/api/auth', {
+        body: JSON.stringify(result),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+
+      }).then(async (res) => {
+  
+        const payload = await res.json()
+        const data = {
+          status: res.status,
+          payload,
+        };
+        if (!res.ok) {
+          throw data
+        }
+        return data
+       
+      })
+      // console.log("result", result)
+      console.log("resultFromNextServer", resultFromNextServer)
+      
     } catch (error: any) {
       //  console.log("error", error)
        const errors = (error as any).payload.errors as {field: string,
@@ -75,7 +97,8 @@ const LoginForm = () => {
         } else {
           toast({
             title: 'Lỗi',
-            description:error.payload.message
+            description:error.payload.message,
+            variant: 'destructive'
           })
         }
 
