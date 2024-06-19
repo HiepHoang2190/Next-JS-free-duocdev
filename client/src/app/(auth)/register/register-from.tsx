@@ -17,10 +17,17 @@ import { Input } from "@/components/ui/input";
 import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema";
 import { error } from "console"
 import envConfig from "@/config"
-
-
+import authApiRequest from "@/app/apiRequests/auth"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
+// import { useAppContext } from "@/app/AppProvider"
+import { clientSessionToken } from "@/lib/http"
 
 const RegisterForm = () => {
+  const { toast } = useToast()
+  const router = useRouter()
+  // const  { setSessionToken } = useAppContext()
+  
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
@@ -32,16 +39,42 @@ const RegisterForm = () => {
   });
 // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
-    // console.log(values);
-    // console.log(process.env.NEXT_PUBLIC_API_ENDPOINT)
-    const result = await fetch(`${envConfig.NEXT_PUBLIC_API_ENDPOINT}/auth/register`, {
-      body: JSON.stringify(values),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST'
-    }).then((res) => res.json())
-    console.log('page_register_form result',result)
+  
+    
+ 
+    try {
+      const result = await authApiRequest.register(values)
+      // console.log('page_register_form result',result)
+      toast({    
+        description:result.payload.message
+      })
+      const resultFromNextServer = await authApiRequest.auth({sessionToken: result.payload.data.token})
+  
+      // console.log("resultFromNextServer", resultFromNextServer)
+      // setSessionToken(result.payload.data.token)
+   
+      router.push('/me')
+    } catch (error: any) {
+      //  console.log("error", error)
+       const errors = (error as any).payload.errors as {field: string,
+        message: string }[]
+        const status = error.status as number
+        if (status === 422) {
+          errors.forEach((error)=> {
+            form.setError(error.field as 'email' | 'password', {
+              type: 'server',
+              message: error.message
+            })
+          })
+        } else {
+          toast({
+            title: 'Lỗi',
+            description:error.payload.message,
+            variant: 'destructive'
+          })
+        }
+
+    }
   }
 
   return (
