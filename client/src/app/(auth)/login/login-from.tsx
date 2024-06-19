@@ -1,5 +1,5 @@
 "use client"
-import React from "react"
+import React, { useState } from "react"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -22,13 +22,13 @@ import { useToast } from "@/components/ui/use-toast"
 import authApiRequest from "@/app/apiRequests/auth"
 import { useRouter } from "next/navigation"
 import { clientSessionToken } from "@/lib/http"
+import { handleErrorApi } from "@/lib/utils"
+import { set } from "zod"
 
 const LoginForm = () => {
   const { toast } = useToast()
 
-  // const  { setSessionToken } = useAppContext()
-
-  // const  { setSessionToken } = useAppContext()
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
@@ -39,7 +39,8 @@ const LoginForm = () => {
   });
   // 2. Define a submit handler.
   async function onSubmit(values: LoginBodyType) {
- 
+    if(loading) return
+    setLoading(true)
     try {
       const result = await authApiRequest.login(values)
       toast({    
@@ -53,24 +54,13 @@ const LoginForm = () => {
       router.push('/me')
     } catch (error: any) {
       //  console.log("error", error)
-       const errors = (error as any).payload.errors as {field: string,
-        message: string }[]
-        const status = error.status as number
-        if (status === 422) {
-          errors.forEach((error)=> {
-            form.setError(error.field as 'email' | 'password', {
-              type: 'server',
-              message: error.message
-            })
-          })
-        } else {
-          toast({
-            title: 'Lỗi',
-            description:error.payload.message,
-            variant: 'destructive'
-          })
-        }
+      handleErrorApi({
+        error,
+        setError: form.setError
+      })
 
+    } finally {
+      setLoading(false)
     }
     
   }

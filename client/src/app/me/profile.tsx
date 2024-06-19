@@ -2,6 +2,7 @@
 // import { useAppContext } from '@/app/AppProvider'
 import accountApiRequest from '@/app/apiRequests/account'
 import envConfig from '@/config'
+import { handleErrorApi } from '@/lib/utils'
 import React from 'react'
 import { useEffect } from 'react'
 
@@ -11,8 +12,16 @@ export default function Profile() {
   
   useEffect(() => {
     const fetchRequest = async () => {
-      const result = await accountApiRequest.meClient()  
-      console.log('page app/me/profile result', result)
+      try {
+        const result = await accountApiRequest.meClient()
+        // console.log('page app/me/profile result', result)
+      } catch (error) {
+        handleErrorApi({
+          error
+        })
+      }
+        
+      
     }
     fetchRequest()
 
