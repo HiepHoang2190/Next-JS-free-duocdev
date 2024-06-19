@@ -18,10 +18,12 @@ import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema"
 
 import envConfig from "@/config"
 import { useToast } from "@/components/ui/use-toast"
+import { useAppContext } from "@/app/AppProvider"
 
 const LoginForm = () => {
   const { toast } = useToast()
-  
+
+  const  { setSessionToken } = useAppContext()
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
     defaultValues: {
@@ -80,7 +82,8 @@ const LoginForm = () => {
        
       })
       // console.log("result", result)
-      console.log("resultFromNextServer", resultFromNextServer)
+      // console.log("resultFromNextServer", resultFromNextServer)
+      setSessionToken(resultFromNextServer.payload.data.token)
       
     } catch (error: any) {
       //  console.log("error", error)
@@ -111,7 +114,7 @@ const LoginForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, (error) => {
-            console.log(error);
+            console.log('page_login-form',error);
           })}
           className="space-y-2 max-w-[600px] flex-shrink-0 w-full"
           noValidate

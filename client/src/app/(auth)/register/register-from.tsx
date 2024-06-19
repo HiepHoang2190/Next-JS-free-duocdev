@@ -41,7 +41,7 @@ const RegisterForm = () => {
       },
       method: 'POST'
     }).then((res) => res.json())
-    console.log('result',result)
+    console.log('page_register_form result',result)
   }
 
   return (
@@ -49,7 +49,7 @@ const RegisterForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit,
           (error) => {
-            console.log(error)
+            console.log('page register form',error)
           }
 
         )} 
