@@ -1,12 +1,17 @@
 import envConfig from "@/config"
 import { normalizePath } from "@/lib/utils"
 import { LoginResType } from "@/schemaValidations/auth.schema"
+// import { redirect } from "next/dist/server/api-utils"
+import { redirect } from "next/navigation"
 
+
+const promiseDelay = (ms : number) => new Promise((resolve) => setTimeout(resolve,ms))
 type CustomOptions = Omit<RequestInit,'method' > & {
   baseUrl?: string | undefined
 }
 
 const ENTITY_ERROR_STATUS = 422
+const AUTHENTICATION_ERROR_STATUS = 401
 
 type EntityErrorPayload = {
   message: string
@@ -58,11 +63,14 @@ class SessionToken {
 }
 
 export const clientSessionToken = new SessionToken()
+let clientLogoutRequest: null | Promise<any> = null
 
 const request = async <Response> (
   method: 'GET' | 'POST' | 'PUT' | 'DELETE', 
   url:string, 
   options?: CustomOptions | undefined) => {
+  
+  
   const body = options?.body ? JSON.stringify(options.body) : undefined
   const baseHeaders = {
     'Content-Type':'application/json',
@@ -97,6 +105,27 @@ const request = async <Response> (
         status: 422,
         payload: EntityErrorPayload
       })
+    } else if ( res.status === AUTHENTICATION_ERROR_STATUS) {
+        if(typeof window !== 'undefined') {
+          if(!clientLogoutRequest) {
+            clientLogoutRequest =  fetch('/api/auth/logout', {
+              method: 'POST',
+              body : JSON.stringify({force: true}),
+              headers: {
+                ...baseHeaders
+              }
+            })
+            await clientLogoutRequest
+            clientSessionToken.value = ''
+            await promiseDelay(1000)
+            clientLogoutRequest = null
+            location.href = '/login'
+          }
+       
+        } else {
+          const sessionToken = (options?.headers as any).Authorization.split('Bearer ')[1]
+          redirect(`logout?sessionToken=${sessionToken}`)
+        }
     } else {
       throw new HttpError(data)
     }
