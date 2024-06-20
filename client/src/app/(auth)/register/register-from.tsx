@@ -45,11 +45,11 @@ const RegisterForm = () => {
     try {
       const result = await authApiRequest.register(values)
       // console.log('page_register_form result',result)
+     
+      const resultFromNextServer = await authApiRequest.auth({sessionToken: result.payload.data.token, expiresAt:result.payload.data.expiresAt})
       toast({    
         description:result.payload.message
       })
-      const resultFromNextServer = await authApiRequest.auth({sessionToken: result.payload.data.token})
-  
       // console.log("resultFromNextServer", resultFromNextServer)
       // setSessionToken(result.payload.data.token)
    
