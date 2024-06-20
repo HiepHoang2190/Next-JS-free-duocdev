@@ -43,11 +43,11 @@ const LoginForm = () => {
     setLoading(true)
     try {
       const result = await authApiRequest.login(values)
+    
+      const resultFromNextServer = await authApiRequest.auth({sessionToken: result.payload.data.token, expiresAt:result.payload.data.expiresAt })
       toast({    
         description:result.payload.message
       })
-      const resultFromNextServer = await authApiRequest.auth({sessionToken: result.payload.data.token})
-  
       // console.log("resultFromNextServer", resultFromNextServer)
       // setSessionToken(result.payload.data.token)
  
