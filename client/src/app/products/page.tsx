@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import DeleteProduct from "@/app/products/_components/delete-product";
 
 export default async function ProductListPage() {
   const { payload } = await productApiRequest.getList();
@@ -36,8 +37,8 @@ export default async function ProductListPage() {
               <Link href={`/products/${product.id}`}>
                 <Button variant={"outline"}>Edit</Button>
               </Link>
-
-              <Button variant={"destructive"}>Delete</Button>
+              <DeleteProduct product={product}/>
+              
             </div>
           </div>
         ))}

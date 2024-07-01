@@ -1,8 +1,11 @@
 import http from '@/lib/http'
+import { MessageResType } from '@/schemaValidations/common.schema'
 import { CreateProductBodyType, ProductListResType, ProductResType, UpdateProductBodyType } from "@/schemaValidations/product.schema"
 
 export const productApiRequest = {
-  getList:()=> http.get<ProductListResType>('/products'),
+  getList:()=> http.get<ProductListResType>('/products',
+    {cache:'no-store'}
+  ),
   getDetail:(id: number)=> http.get<ProductListResType>(`/products/${id}`,
     {cache:'no-store'}
   ),
@@ -11,7 +14,8 @@ export const productApiRequest = {
   uploadImage: (body: FormData) => http.post<{
     message: string
     data: string
-  }>('/media/upload',body)
+  }>('/media/upload',body),
+  delete: (id: number) => http.delete<MessageResType>(`/products/${id}`)
 }
 
 export default productApiRequest
