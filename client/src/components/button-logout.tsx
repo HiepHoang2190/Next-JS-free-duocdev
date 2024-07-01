@@ -19,7 +19,9 @@ export default function ButtonLogout() {
       authApiRequest.logoutFromNextClientToNextServer(true).then(res=>{
         router.push(`/login?redirectFrom=${pathname}`)
       })
-    } 
+    } finally {
+      router.refresh()
+    }
   }
   return (
     <Button size={'sm'} onClick={handleLogout}> Đăng xuất</Button>

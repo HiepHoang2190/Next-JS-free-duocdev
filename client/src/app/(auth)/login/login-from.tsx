@@ -52,6 +52,7 @@ const LoginForm = () => {
       // setSessionToken(result.payload.data.token)
  
       router.push('/me')
+      router.refresh()
     } catch (error: any) {
       //  console.log("error", error)
       handleErrorApi({
