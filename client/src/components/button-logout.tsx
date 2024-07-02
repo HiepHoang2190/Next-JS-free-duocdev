@@ -1,11 +1,14 @@
 'use client'
+
+
 import authApiRequest from '@/app/apiRequests/auth'
+import { useAppContext } from '@/app/AppProvider'
 import { Button } from '@/components/ui/button'
 import { handleErrorApi } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
-
 export default function ButtonLogout() {
+  const {user} = useAppContext()
+  // console.log(user)
   const router = useRouter()
   const pathname = usePathname()
   const handleLogout = async() => {
@@ -27,3 +30,7 @@ export default function ButtonLogout() {
     <Button size={'sm'} onClick={handleLogout}> Đăng xuất</Button>
   )
 }
+// function useAppContext(): { user: any } {
+//   throw new Error('Function not implemented.')
+// }
+

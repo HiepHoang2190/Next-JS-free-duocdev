@@ -4,17 +4,12 @@ import Link from "next/link"
 import React from "react"
 import { cookies } from "next/headers"
 import accountApiRequest from "@/app/apiRequests/account"
+import { AccountResType } from "@/schemaValidations/account.schema"
 
-export default async function Header() {
-  const cookieStore = cookies()
-  const sessionToken = cookieStore.get("sessionToken")?.value ?? ""
-  let user = null;
-  try {
-    if (sessionToken) {
-      const data = await accountApiRequest.me(sessionToken)
-      user = data.payload.data;
-    }
-  } catch (error) {}
+export default async function Header({
+  user
+}:{user: AccountResType['data'] | null}) {
+
 
   return (
     <div>
@@ -24,9 +19,9 @@ export default async function Header() {
         </li>
         {user ? (
           <>
-            <li>
+            <Link href="/me">
               <div>Xin chào <strong>{user.name}</strong></div>
-            </li>
+            </Link>
             <li>
               <ButtonLogout />
             </li>
