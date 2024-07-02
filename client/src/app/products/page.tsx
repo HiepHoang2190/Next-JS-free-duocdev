@@ -39,7 +39,7 @@ export default async function ProductListPage() {
             <div>{product.price}</div>
             {isAuthenticated && (
                <div className="flex space-x-2">
-               <Link href={`/products/${product.id}`}>
+               <Link href={`/products/${product.id}/edit`}>
                  <Button variant={"outline"}>Edit</Button>
                </Link>
                <DeleteProduct product={product} />

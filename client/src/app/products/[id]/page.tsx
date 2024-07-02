@@ -1,23 +1,35 @@
-import productApiRequest from '@/app/apiRequests/product'
-import ProductAddForm from '@/app/products/_components/product-add-form'
-import React from 'react'
-
-export default async function ProductEdit({params}: {params: {id:string}}) {
-  // console.log(params);
-  let product = null
+import productApiRequest from "@/app/apiRequests/product";
+import React from "react";
+import Image from "next/image";
+export default async function ProductDetail({
+  params,
+}: {
+  params: { id: string };
+}) {
+  let product = null;
   try {
-    const {payload} = await productApiRequest.getDetail(Number(params.id))
-    product = payload.data
-    
+    const { payload } = await productApiRequest.getDetail(Number(params.id));
+    product = payload.data;
   } catch (error) {
     // console.log(error)
-
   }
 
   return (
     <div>
       {!product && <div>Không tìm thấy sản phẩm</div>}
-      {product && <ProductAddForm product={product}/>}
+      {product && (
+        <div>
+          <Image
+            src={product.image}
+            alt={product.name}
+            width={180}
+            height={180}
+            className="w-32 h-32 object-cover"
+          />
+          <h3>{product.name}</h3>
+          <div>{product.price}</div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
