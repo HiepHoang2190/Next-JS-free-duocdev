@@ -1,14 +1,47 @@
 import productApiRequest from "@/app/apiRequests/product";
 import React from "react";
 import Image from "next/image";
-export default async function ProductDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
+import { Metadata, ResolvingMetadata } from 'next'
+import { cache } from 'react'
+import envConfig from '@/config'
+// import { baseOpenGraph } from '@/app/shared-metadata'
+
+const getDetail = cache(productApiRequest.getDetail)
+
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { payload } = await getDetail(Number(params.id))
+  const product = payload.data
+  const url = envConfig.NEXT_PUBLIC_URL + '/products/' + product.id
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      url,
+      images: [
+        {
+          url: product.image
+        }
+      ]
+    },
+    alternates: {
+      canonical: url
+    }
+  }
+}
+export default async function ProductDetail({ params, searchParams }: Props) {
   let product = null;
   try {
-    const { payload } = await productApiRequest.getDetail(Number(params.id));
+    const { payload } = await getDetail(Number(params.id));
     product = payload.data;
   } catch (error) {
     // console.log(error)
