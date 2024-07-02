@@ -19,7 +19,7 @@ import { RegisterBody, RegisterBodyType } from "@/schemaValidations/auth.schema"
 import authApiRequest from "@/app/apiRequests/auth"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
-import { clientSessionToken } from "@/lib/http"
+
 import { handleErrorApi } from "@/lib/utils"
 
 const RegisterForm = () => {

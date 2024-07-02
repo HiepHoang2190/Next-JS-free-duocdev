@@ -1,6 +1,5 @@
 "use client";
 import { useLayoutEffect } from "react"
-import { clientSessionToken } from "@/lib/http"
 import { AccountResType } from "@/schemaValidations/account.schema";
 import {
   createContext,
@@ -34,15 +33,7 @@ export default function AppProvider({
 }) {
   // console.log(user)
   const [user, setUser] = useState<User | null>(userProp)
-  useState(()=>{
-    if(typeof window !== 'undefined') {
-      clientSessionToken.value = inititalSessionToken
-    }
-   
-  })
-  // useLayoutEffect(() => {
-  //   sessionToken.value = inititalSessionToken
-  // }, [inititalSessionToken])
+ 
   return (
   <AppContext.Provider value={{
     user,

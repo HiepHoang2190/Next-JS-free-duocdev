@@ -48,54 +48,70 @@ export class EntityError extends HttpError {
   }
 }
 
-class SessionToken {
-  private token = ''
-  private _expiresAt = new Date().toISOString()
+// class SessionToken {
+//   private token = ''
+//   private _expiresAt = new Date().toISOString()
 
-  get value() {
-    return this.token
-  }
-  set value(token: string) {
-    // Nếu gọi method này ở server thì sẽ bị lỗi
-    if(typeof window === 'undefined') {
-      throw new Error('Cannot set token on server side')
-    }
-    this.token = token
-  }
+//   get value() {
+//     return this.token
+//   }
+//   set value(token: string) {
+//     // Nếu gọi method này ở server thì sẽ bị lỗi
+//     if(typeof window === 'undefined') {
+//       throw new Error('Cannot set token on server side')
+//     }
+//     this.token = token
+//   }
 
-  get expiresAt() {
-    return this._expiresAt
-  }
-  set expiresAt(expiresAt: string) {
-    // Nếu gọi method này ở server thì sẽ bị lỗi
-    if(typeof window === 'undefined') {
-      throw new Error('Cannot set token on server side')
-    }
-    this._expiresAt = expiresAt
-  }
-}
+//   get expiresAt() {
+//     return this._expiresAt
+//   }
+//   set expiresAt(expiresAt: string) {
+//     // Nếu gọi method này ở server thì sẽ bị lỗi
+//     if(typeof window === 'undefined') {
+//       throw new Error('Cannot set token on server side')
+//     }
+//     this._expiresAt = expiresAt
+//   }
+// }
 
-export const clientSessionToken = new SessionToken()
+// export const clientSessionToken = new SessionToken()
 let clientLogoutRequest: null | Promise<any> = null
-
+export const isClient = () => typeof window !== 'undefined'
 const request = async <Response> (
   method: 'GET' | 'POST' | 'PUT' | 'DELETE', 
   url:string, 
   options?: CustomOptions | undefined) => {
   
-  
-  const body = options?.body ? (options.body instanceof FormData ? options.body : JSON.stringify(options.body)): undefined
-  const baseHeaders = 
-  body instanceof FormData 
-
-  ?{
-    'Authorization': clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : ''
+  let body : FormData | string | undefined = undefined
+  if(options?.body instanceof FormData) {
+    body = options.body
+  } else if(options?.body) {
+    body = JSON.stringify(options.body)
   }
-  
-  : {
+  const baseHeaders: {
+    [key: string]: string
+  } = body instanceof FormData ? {} : {
     'Content-Type':'application/json',
-    'Authorization': clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : ''
   }
+  if(isClient()) {
+    const sessitonToken = localStorage.getItem('sessitonToken')
+    if (sessitonToken) {
+      baseHeaders.Authorization = `Bearer ${sessitonToken}`
+    }
+  }
+  // const body = options?.body ? (options.body instanceof FormData ? options.body : JSON.stringify(options.body)): undefined
+  // const baseHeaders = 
+  // body instanceof FormData 
+
+  // ?{
+  //   'Authorization': clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : ''
+  // }
+  
+  // : {
+  //   'Content-Type':'application/json',
+  //   'Authorization': clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : ''
+  // }
   
 
   //  Nếu không truyền baseUrl ( hoặc baseUrrl = undefined) thì lấy từ evnConfig.NEXT_PUBLIC_API_ENDPOINT
@@ -127,7 +143,7 @@ const request = async <Response> (
         payload: EntityErrorPayload
       })
     } else if ( res.status === AUTHENTICATION_ERROR_STATUS) {
-        if(typeof window !== 'undefined') {
+        if(isClient()) {
           if(!clientLogoutRequest) {
             clientLogoutRequest =  fetch('/api/auth/logout', {
               method: 'POST',
@@ -136,13 +152,20 @@ const request = async <Response> (
                 ...baseHeaders
               } as any
             })
-            await clientLogoutRequest
-            clientSessionToken.value = ''
-            
-            clientSessionToken.expiresAt = new Date().toISOString()
-            // await promiseDelay(1000)
-            clientLogoutRequest = null
-            location.href = '/login'
+
+            try {
+              await clientLogoutRequest
+            } catch (error) {
+              
+            } finally {
+              localStorage.removeItem('sessionToken')
+              localStorage.removeItem('sessionTokenExpiresAt')
+              clientLogoutRequest = null
+              location.href = '/login'
+            }
+
+           
+       
           }
        
         } else {
@@ -154,12 +177,14 @@ const request = async <Response> (
     }
   }
   // Đảm bảo logic dưới đây chỉ chạy ở phía client ( browser)
-  if(typeof window !== 'undefined') {
+  if(isClient()) {
     if(['auth/login', 'auth/register'].some(item => item === normalizePath(url)) ) {
-      clientSessionToken.value = (payload as LoginResType).data.token
+      const {token, expiresAt} = (payload as LoginResType).data
+      localStorage.setItem('sessionToken', token)
+      localStorage.setItem('sessionTokenExpiresAt', expiresAt)
     } else if ('auth/logout' === normalizePath(url)) {
-      clientSessionToken.value = ''
-      clientSessionToken.expiresAt = new Date().toISOString()
+      localStorage.removeItem('sessionToken')
+      localStorage.removeItem('sessionTokenExpiresAt')
     }
   }
  

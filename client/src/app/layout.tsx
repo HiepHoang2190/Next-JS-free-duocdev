@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import { Toaster } from "@/components/ui/toaster"
 import AppProvider from "@/app/AppProvider";
-import { cookies } from "next/headers";
+
 import SlideSession from "@/components/slide-session";
 import accountApiRequest from "@/app/apiRequests/account";
 import { AccountResType } from "@/schemaValidations/account.schema";
@@ -30,16 +30,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const cookieStore = cookies()
-  const sessionToken = cookieStore.get('sessionToken')
+ 
   // console.log('Rootlayout',cookieStore.get('sessionToken'))
   let user : AccountResType['data']| null = null;
-  try {
-    if (sessionToken) {
-      const data = await accountApiRequest.me(sessionToken.value)
-      user = data.payload.data;
-    }
-  } catch (error) {}
+
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -52,7 +46,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
            
-            <AppProvider inititalSessionToken={sessionToken?.value} user={user}>
+            <AppProvider  user={user}>
             <Header user={user}/>
              {children}
              <SlideSession/>
