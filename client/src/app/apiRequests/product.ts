@@ -6,7 +6,7 @@ export const productApiRequest = {
   getList:()=> http.get<ProductListResType>('/products',
     {cache:'no-store'}
   ),
-  getDetail:(id: number)=> http.get<ProductListResType>(`/products/${id}`,
+  getDetail:(id: number)=> http.get<ProductResType>(`/products/${id}`,
     {cache:'no-store'}
   ),
   create: (body: CreateProductBodyType) => http.post<ProductResType>('/products',body),
