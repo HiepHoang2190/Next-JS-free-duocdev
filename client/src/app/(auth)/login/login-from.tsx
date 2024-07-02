@@ -21,7 +21,6 @@ import { useToast } from "@/components/ui/use-toast"
 // import { useAppContext } from "@/app/AppProvider"
 import authApiRequest from "@/app/apiRequests/auth"
 import { useRouter } from "next/navigation"
-import { clientSessionToken } from "@/lib/http"
 import { handleErrorApi } from "@/lib/utils"
 import { set } from "zod"
 
