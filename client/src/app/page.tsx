@@ -16,14 +16,15 @@ export default function Home() {
 //  }
   return (
     <main className="">
-      <ul>
+      {/* <ul>
         <li>
           <Link href={'/login'}>Login</Link>
         </li>
         <li>
           <Link href={'/register'}>Register</Link>
         </li>
-      </ul>
+      </ul> */}
+      Xin chào
     </main>
   );
 }
