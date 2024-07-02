@@ -5,6 +5,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import DeleteProduct from "@/app/products/_components/delete-product";
 import { cookies } from "next/headers";
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Danh sách sản phẩm",
+};
+
 
 export default async function ProductListPage() {
   const cookieStore = cookies();

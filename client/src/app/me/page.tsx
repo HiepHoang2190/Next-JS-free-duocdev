@@ -4,6 +4,13 @@ import { cookies } from 'next/headers'
 import Profile from '@/app/me/profile';
 import accountApiRequest from '@/app/apiRequests/account';
 import ProfileForm from '@/app/me/profile-form';
+import type { Metadata } from 'next';
+
+
+export const metadata: Metadata = {
+  title: 'Hồ sơ người dùng',
+  description: "Được tạo bởi Lotus Dev",
+};
 
 export default async function MeProfile() {
   const cookieStore = cookies()

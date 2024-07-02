@@ -7,8 +7,14 @@ import Link from "next/link"
 import { constants } from "buffer"
 
 import { redirect } from "next/navigation"
+import type { Metadata } from "next"
 
 const isAuth = false
+
+export const metadata: Metadata = {
+  title: 'Trang chủ',
+  description: "Trang chủ của Productic, được tạo bởi Lotus Dev",
+};
 
 export default function Home() {
 //  if(!isAuth) {
